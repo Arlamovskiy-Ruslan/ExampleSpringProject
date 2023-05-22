@@ -6,6 +6,7 @@ import com.example.examplespringproject.model.User;
 import com.example.examplespringproject.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,12 +27,14 @@ public class UserController {
         return userService.getUserByEmail(email);
     }
 
-    @PostMapping("/create")
+    @PostMapping(value = "/create", consumes = MimeTypeUtils.APPLICATION_JSON_VALUE)
     public User createUser(@RequestBody UserRequest userRequest) {
         var user = User.builder()
                 .email(userRequest.getEmail())
                 .password(passwordEncoder.encode(userRequest.getPassword()))
                 .roles(userRequest.getRoles())
+                .createdBy(userRequest.getRoles())
+                .modifiedBy(userRequest.getRoles())
                 .build();
 
         return userService.save(user);
