@@ -1,0 +1,25 @@
+spring:
+  jpa:
+    hibernate:
+      dialect: org.hibernate.dialect.MySQL5Dialect
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: update
+    dbcp2:
+      test-while-idle: true
+      validation-query: SELECT 1
+    open-in-view: false
+    show-sql: false
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/example_spring_project?useSSL=false
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.jdbc.Driver
+
+management:
+  endpoints:
+    enabled-by-default: true
+    web:
+      exposure:
+        include: auditevents
