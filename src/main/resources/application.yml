@@ -17,6 +17,10 @@ spring:
     password: 1234
     driver-class-name: com.mysql.jdbc.Driver
 
+logging:
+  level:
+    root: INFO
+
 management:
   endpoints:
     enabled-by-default: true

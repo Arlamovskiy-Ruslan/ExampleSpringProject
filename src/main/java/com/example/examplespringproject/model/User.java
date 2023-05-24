@@ -6,21 +6,19 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.util.UUID;
 
-@EqualsAndHashCode(callSuper = true)
-@Entity(name = "User")
 @Data
-@Builder
+@Entity(name = "User")
+@SuperBuilder
 @NoArgsConstructor
-@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class User extends Auditable<String> implements Serializable {
 
     @Id

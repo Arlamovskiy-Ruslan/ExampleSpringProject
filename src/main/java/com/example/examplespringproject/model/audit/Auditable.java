@@ -6,7 +6,9 @@ import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Temporal;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -20,7 +22,9 @@ import static jakarta.persistence.TemporalType.TIMESTAMP;
 @Data
 @EqualsAndHashCode
 @ToString
+@SuperBuilder
 @MappedSuperclass
+@NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public abstract class Auditable<T> {
 

@@ -2,15 +2,22 @@ package com.example.examplespringproject.security;
 
 import com.example.examplespringproject.service.auth.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.actuate.audit.AuditEvent;
+import org.springframework.boot.actuate.audit.InMemoryAuditEventRepository;
+import org.springframework.boot.actuate.audit.listener.AuditApplicationEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.EventListener;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -35,6 +42,22 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
+    public PasswordEncoder passwordEncoder() {
+        return NoOpPasswordEncoder.getInstance();
+    }
 
+    @Bean
+    public InMemoryAuditEventRepository auditEventRepository() {
+        return new InMemoryAuditEventRepository();
+    }
+
+    @EventListener
+    public void auditEventHappened(AuditApplicationEvent auditApplicationEvent) {
+        AuditEvent auditEvent = auditApplicationEvent.getAuditEvent();
+        log.info("Principal " + auditEvent.getPrincipal() + " - " + auditEvent.getType());
+        WebAuthenticationDetails details = (WebAuthenticationDetails) auditEvent.getData().get("details");
+        log.info("  Remote IP address: " + details.getRemoteAddress());
+        log.info("  Session Id: " + details.getSessionId());
+        log.info("  Request URL: " + auditEvent.getData().get("requestUrl"));
+    }
 }
