@@ -6,6 +6,8 @@ import com.example.examplespringproject.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
@@ -20,5 +22,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByEmail(String email) throws UserNotFoundException {
         return userManager.getUserByEmail(email);
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userManager.getAllUsers();
     }
 }

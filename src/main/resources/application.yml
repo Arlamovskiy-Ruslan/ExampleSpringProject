@@ -1,3 +1,4 @@
+
 spring:
   jpa:
     hibernate:
@@ -9,7 +10,7 @@ spring:
       test-while-idle: true
       validation-query: SELECT 1
     open-in-view: false
-    show-sql: false
+    show-sql: true
 
   datasource:
     url: jdbc:mysql://localhost:3306/example_spring_project?useSSL=false
@@ -23,7 +24,6 @@ logging:
 
 management:
   endpoints:
-    enabled-by-default: true
     web:
       exposure:
-        include: auditevents
+        include: '*'

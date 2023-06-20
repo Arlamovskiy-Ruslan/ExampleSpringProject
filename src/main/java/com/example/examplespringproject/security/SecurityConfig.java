@@ -1,17 +1,20 @@
 package com.example.examplespringproject.security;
 
+import com.example.examplespringproject.repository.AuditEventRepositoryImpl;
 import com.example.examplespringproject.service.auth.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.actuate.audit.AuditEvent;
-import org.springframework.boot.actuate.audit.InMemoryAuditEventRepository;
+import org.springframework.boot.actuate.audit.AuditEventRepository;
 import org.springframework.boot.actuate.audit.listener.AuditApplicationEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -24,6 +27,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
+    private final AuditEventRepositoryImpl auditEventService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -42,13 +46,16 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
-    }
+    @Profile("dev")
+    public PasswordEncoder passwordEncoder() { return NoOpPasswordEncoder.getInstance(); }
 
     @Bean
-    public InMemoryAuditEventRepository auditEventRepository() {
-        return new InMemoryAuditEventRepository();
+    @Profile("!dev")
+    public PasswordEncoder passwordEncoderNonDev() { return new BCryptPasswordEncoder(); }
+
+    @Bean
+    public AuditEventRepository auditEventRepository() {
+        return this.auditEventService;
     }
 
     @EventListener

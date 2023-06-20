@@ -6,6 +6,8 @@ import com.example.examplespringproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 public class UserManagerImpl implements UserManager {
@@ -21,5 +23,10 @@ public class UserManagerImpl implements UserManager {
     public User getUserByEmail(String email) throws UserNotFoundException {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User with given email or password does not exist"));
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 }
